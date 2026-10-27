@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Revive Mobile Auto Care | On-Location Mechanical & Detailing</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        darkCharcoal: '#121212',
+                        cardCharcoal: '#1E1E1E',
+                        metallicSilver: '#9CA3AF',
+                        brandRed: '#EF4444',
+                        brandYellow: '#FACC15',
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Smooth scrolling with offset for sticky header */
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 6rem;
+        }
+        body {
+            background-color: #121212;
+            color: #F3F4F6;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+        /* Custom Before/After Slider Styling */
+        .img-comp-container {
+            position: relative;
+            height: 400px;
+            overflow: hidden;
+            border-radius: 0.75rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+        }
+        .img-comp-img {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+        .img-comp-img img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            max-width: none;
+        }
+        .img-comp-slider {
+            position: absolute;
+            z-index: 9;
+            cursor: ew-resize;
+            width: 40px;
+            height: 40px;
+            background-color: #EF4444;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 15px rgba(239, 68, 68, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+        .img-comp-slider::after {
+            content: '';
+            position: absolute;
+            top: -250px;
+            bottom: -250px;
+            left: 50%;
+            width: 3px;
+            background-color: #EF4444;
+            transform: translateX(-50%);
+            z-index: -1;
+        }
+    </style>
+</head>
+<body class="bg-darkCharcoal text-gray-100 antialiased selection:bg-brandRed selection:text-white">
+
+    <!-- Top Notification Bar (Country-relevant Info) -->
+    <div id="country-banner" class="bg-cardCharcoal border-b border-gray-800 text-xs py-2 px-4 text-center text-metallicSilver sticky top-0 z-50 transition-all duration-300">
+        <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-center gap-4">
+            <span id="location-indicator" class="flex items-center gap-1.5"><i class="fa-solid fa-location-dot text-brandRed"></i> Detecting location & currency...</span>
+            <span class="hidden sm:inline text-gray-600">|</span>
+            <span id="region-compliance" class="flex items-center gap-1.5"><i class="fa-solid fa-shield-halved text-brandYellow"></i> On-Location Call-Out Guaranteed</span>
+        </div>
+    </div>
+
+    <!-- Sticky Navigation Header -->
+    <header class="sticky top-[33px] sm:top-[37px] z-40 bg-darkCharcoal/95 backdrop-blur border-b border-gray-800 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <!-- Brand Logo -->
+            <a href="#hero" class="flex items-center gap-3 group">
+                <div class="w-12 h-12 bg-gradient-to-br from-brandRed to-red-700 rounded-lg flex items-center justify-center text-white text-xl font-black shadow-lg shadow-red-900/30 group-hover:scale-105 transition-transform">
+                    <i class="fa-solid fa-car-burst"></i>
+                </div>
+                <div>
+                    <span class="text-xl sm:text-2xl font-black tracking-wider text-white uppercase font-sans">REVIVE</span>
+                    <span class="block text-[10px] tracking-widest text-brandYellow font-bold uppercase">Mobile Auto Care</span>
+                </div>
+            </a>
+
+            <!-- Desktop Nav Links -->
+            <nav class="hidden md:flex items-center gap-8 text-sm font-semibold tracking-wide uppercase text-metallicSilver">
+                <a href="#services" class="hover:text-white transition-colors">Services</a>
+                <a href="#transformations" class="hover:text-white transition-colors">Results</a>
+                <a href="#service-checker" class="hover:text-white transition-colors">Service Area</a>
+                <a href="#booking" class="hover:text-white transition-colors">Book Now</a>
+            </nav>
+
+            <!-- Action Button -->
+            <div class="flex items-center gap-4">
+                <a href="#booking" class="bg-brandRed hover:bg-red-600 text-white font-bold uppercase text-xs sm:text-sm tracking-wider px-5 py-3 rounded-lg shadow-lg shadow-red-600/30 transition-all hover:scale-105 flex items-center gap-2">
+                    <i class="fa-solid fa-calendar-check"></i>
+                    <span>Book Mobile Service</span>
+                </a>
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-btn" aria-label="Toggle Navigation Menu" class="md:hidden text-gray-300 hover:text-white text-2xl p-2 focus:outline-none">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Dropdown -->
+        <div id="mobile-menu" class="hidden md:hidden bg-cardCharcoal border-b border-gray-800 px-6 py-4 space-y-3">
+            <a href="#services" class="block text-sm font-semibold uppercase text-metallicSilver hover:text-white py-2 mobile-link">Services</a>
+            <a href="#transformations" class="block text-sm font-semibold uppercase text-metallicSilver hover:text-white py-2 mobile-link">Results</a>
+            <a href="#service-checker" class="block text-sm font-semibold uppercase text-metallicSilver hover:text-white py-2 mobile-link">Service Area</a>
+            <a href="#booking" class="block text-sm font-semibold uppercase text-brandYellow hover:text-white py-2 mobile-link">Book Now</a>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main>
+        <!-- Hero Section -->
+        <section id="hero" class="relative min-h-[85vh] flex items-center justify-center bg-cover bg-center py-20 px-4 sm:px-6 lg:px-8" style="background-image: linear-gradient(to bottom, rgba(18,18,18,0.85), rgba(18,18,18,0.95)), url('https://images.unsplash.com/photo-1486006920555-c77dce18193b?auto=format&fit=crop&q=80&w=1920');">
+            <div class="absolute inset-0 bg-gradient-to-r from-darkCharcoal via-transparent to-darkCharcoal opacity-80"></div>
+            
+            <div class="relative max-w-5xl mx-auto text-center z-10 space-y-8">
+                <!-- Badge -->
+                <div class="inline-flex items-center gap-2 bg-cardCharcoal/90 border border-gray-800 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest text-brandYellow shadow-xl">
+                    <i class="fa-solid fa-bolt text-brandYellow animate-pulse"></i>
+                    <span>We Come To Your Home or Office</span>
+                </div>
+
+                <!-- Main Heading -->
+                <h1 class="text-4xl sm:text-6xl lg:text-7xl font-black uppercase tracking-tight text-white leading-none">
+                    Professional Auto Care <br>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-brandRed via-red-500 to-brandYellow">Delivered To Your Door.</span>
+                </h1>
+
+                <!-- Subtitle -->
+                <p class="max-w-2xl mx-auto text-base sm:text-lg text-metallicSilver font-normal leading-relaxed">
+                    Skip the repair shop queue. Certified mechanics and elite detailing specialists arrive fully equipped at your location to restore your vehicle’s performance and showroom shine.
+                </p>
+
+                <!-- CTA Group -->
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
+                    <a href="#booking" class="w-full sm:w-auto bg-brandRed hover:bg-red-600 text-white font-black uppercase tracking-wider text-sm sm:text-base px-8 py-4 rounded-xl shadow-xl shadow-red-600/40 transition-all hover:scale-105 flex items-center justify-center gap-3">
+                        <i class="fa-solid fa-wrench"></i>
+                        <span>Book Mobile Service</span>
+                    </a>
+                    <a href="#services" class="w-full sm:w-auto bg-cardCharcoal hover:bg-gray-800 border border-gray-700 text-white font-bold uppercase tracking-wider text-sm sm:text-base px-8 py-4 rounded-xl transition-all flex items-center justify-center gap-2">
+                        <span>Explore Services</span>
+                        <i class="fa-solid fa-arrow-down"></i>
+                    </a>
+                </div>
+
+                <!-- Trust Stats -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 pt-12 border-t border-gray-800/80 max-w-4xl mx-auto text-center">
+                    <div class="p-3 bg-cardCharcoal/50 rounded-xl border border-gray-800">
+                        <div class="text-2xl sm:text-3xl font-black text-white">100%</div>
+                        <div class="text-xs text-metallicSilver uppercase font-semibold mt-1">Mobile Convenience</div>
+                    </div>
+                    <div class="p-3 bg-cardCharcoal/50 rounded-xl border border-gray-800">
+                        <div class="text-2xl sm:text-3xl font-black text-brandYellow" id="stat-rating">4.9 ★</div>
+                        <div class="text-xs text-metallicSilver uppercase font-semibold mt-1">Customer Rating</div>
+                    </div>
+                    <div class="p-3 bg-cardCharcoal/50 rounded-xl border border-gray-800">
+                        <div class="text-2xl sm:text-3xl font-black text-white" id="stat-warranty">12 Mo</div>
+                        <div class="text-xs text-metallicSilver uppercase font-semibold mt-1">Parts & Labor Warranty</div>
+                    </div>
+                    <div class="p-3 bg-cardCharcoal/50 rounded-xl border border-gray-800">
+                        <div class="text-2xl sm:text-3xl font-black text-brandRed" id="stat-jobs">5,000+</div>
+                        <div class="text-xs text-metallicSilver uppercase font-semibold mt-1">Vehicles Serviced</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Interactive Before & After Section -->
+        <section id="transformations" class="py-24 bg-cardCharcoal/40 border-y border-gray-800">
+            <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-3xl mx-auto mb-16 space-y-4">
+                    <span class="text-brandRed uppercase font-bold tracking-widest text-xs">Visual Proof</span>
+                    <h2 class="text-3xl sm:text-5xl font-black uppercase text-white tracking-tight">Witness The Transformation</h2>
+                    <p class="text-metallicSilver text-sm sm:text-base">Drag the slider left and right to inspect our signature mobile detailing and precision repair restoration results.</p>
+                </div>
+
+                <!-- Toggle between Detailing and Repair showcase -->
+                <div class="flex justify-center mb-8 gap-3">
+                    <button onclick="switchSlider('detailing')" id="btn-slider-detailing" class="px-6 py-2.5 rounded-lg font-bold text-xs uppercase tracking-wider transition-all bg-brandRed text-white shadow-lg shadow-red-600/30">
+                        <i class="fa-solid fa-spray-can-sparkles mr-2"></i> Paint Correction & Detailing
+                    </button>
+                    <button onclick="switchSlider('repair')" id="btn-slider-repair" class="px-6 py-2.5 rounded-lg font-bold text-xs uppercase tracking-wider transition-all bg-gray-800 text-metallicSilver hover:text-white">
+                        <i class="fa-solid fa-gears mr-2"></i> Engine Bay / Brake Restoration
+                    </button>
+                </div>
+
+                <!-- Before/After Widget Container -->
+                <div id="comparison-container" class="img-comp-container">
+                    <!-- After Image (Background) -->
+                    <div class="img-comp-img">
+                        <img id="img-after" src="https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?auto=format&fit=crop&q=80&w=1200" alt="After Revive Service">
+                        <div class="absolute bottom-4 right-4 bg-black/70 backdrop-blur text-brandYellow px-3 py-1 rounded text-xs font-bold uppercase tracking-wider border border-brandYellow/30">
+                            After Revive Care
+                        </div>
+                    </div>
+                    <!-- Before Image (Foreground with dynamic clip-path width) -->
+                    <div class="img-comp-img" id="img-comp-foreground" style="width: 50%;">
+                        <img id="img-before" src="https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&q=80&w=1200" alt="Before Revive Service">
+                        <div class="absolute bottom-4 left-4 bg-black/70 backdrop-blur text-metallicSilver px-3 py-1 rounded text-xs font-bold uppercase tracking-wider border border-gray-700">
+                            Before Service
+                        </div>
+                    </div>
+                    <!-- Slider Handle -->
+                    <div id="img-comp-slider" class="img-comp-slider">
+                        <i class="fa-solid fa-arrows-left-right"></i>
+                    </div>
+                </div>
+                <div class="text-center mt-4">
+                    <p class="text-xs text-gray-500 uppercase tracking-widest"><i class="fa-regular fa-hand-pointer mr-1"></i> Drag left/right on the image box to compare</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Transparent Service Packages Grid -->
+        <section id="services" class="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+            <div class="text-center max-w-3xl mx-auto mb-16 space-y-4">
+                <span class="text-brandRed uppercase font-bold tracking-widest text-xs">Transparent Pricing</span>
+                <h2 class="text-3xl sm:text-5xl font-black uppercase text-white tracking-tight">Our Mobile Service Packages</h2>
+                <p class="text-metallicSilver text-sm sm:text-base">No hidden call-out fees within standard coverage zones. Professional equipment brought right to your driveway.</p>
+            </div>
+
+            <!-- Pricing Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                
+                <!-- Package 1: Full Mobile Detail -->
+                <div class="bg-cardCharcoal border border-gray-800 hover:border-brandRed/60 rounded-2xl p-6 flex flex-col justify-between transition-all duration-300 hover:shadow-xl hover:shadow-red-900/10 group">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-xs font-bold uppercase tracking-widest bg-gray-800 text-metallicSilver px-3 py-1 rounded-full group-hover:bg-brandRed group-hover:text-white transition-colors">Detailing</span>
+                            <i class="fa-solid fa-wand-magic-sparkles text-brandYellow text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold uppercase text-white mb-2">Full Mobile Detail</h3>
+                        <p class="text-xs text-metallicSilver mb-6">Complete interior deep sanitization & exterior foam wash with ceramic spray sealant.</p>
+                        
+                        <div class="space-y-3 mb-6 text-sm text-gray-300">
+                            <div class="flex items-start gap-2">
+                                <i class="fa-solid fa-check text-brandYellow mt-1"></i>
+                                <span>Complete foam wash & clay bar treatment</span>
+                            </div>
+                            <div class="flex items-start gap-2">
+                                <i class="fa-solid fa-check text-brandYellow mt-1"></i>
+                                <span>Interior steam cleaning & leather conditioning</span>
+                            </div>
+                            <div class="flex items-start gap-2">
+                                <i class="fa-solid fa-check text-brandYellow mt-1"></i>
+                                <span>Wheel well scrub & tire dressing</span>
+                            </div>
+                            <div class="flex items-start gap-2">
+                                <i class="fa-solid fa-check text-brandYellow mt-1"></i>
+                                <span>Duration: ~2.5 - 3.5 Hours</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pt-6 border-t border-gray-800">
+                        <div class="flex items-baseline justify-between mb-4">
+                            <span class="text-xs text-metallicSilver uppercase font-semibold">Starting at</span>
+                            <span class="text-2xl sm:text-3xl font-black text-white price-display" data-base-usd="149" data-base-zar="2250" data-base-gbp="120" data-base-aud="230">$149</span>
+                        </div>
+                        <a href="#booking" onclick="selectService('Full Mobile Detail')" class="w-full bg-gray-800 hover:bg-brandRed text-white font-bold uppercase text-xs tracking-wider py-3 rounded-xl transition-colors block text-center">
+                            Book This Package
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Package 2: Brake & Rotor Replacement -->
+                <div class="bg-cardCharcoal border border-brandRed/80 rounded-2xl p-6 flex flex-col justify-between shadow-lg shadow-red-900/20 relative group">
+                    <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-brandRed text-white text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full shadow-md">
+                        Most Popular
+                    </div>
+                    <div>
+                        <div class="flex items-center justify-between mb-4 mt-2">
+                            <span class="text-xs font-bold uppercase tracking-widest bg-red-950 text-red-300 px-3 py-1 rounded-full">Mechanical</span>
+                            <i class="fa-solid fa-shield-halved text-brandRed text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold uppercase text-white mb-2">Brake & Rotor Service</h3>
+                        <p class="text-xs text-metallicSilver mb-6">On-site replacement of brake pads and rotors using OEM-spec premium components.</p>
+                        
+                        <div class="space-y-3 mb-6 text-sm text-gray-300">
+                            <div class="flex items-start gap-2">
+                                <i class="fa-solid fa-check text-brandRed mt-1"></i>
+                                <span>New premium ceramic brake pads (Front or Rear)</span>
+                            </div>
+                            <div class="flex items-start gap-2">
+                                <i class="fa-solid fa-check text-brandRed mt-1"></i>
+                                <span>Precision-machined or replaced brake rotors</span>
+                            </div>
+                            <div class="flex items-start gap-2">
+                                <i class="fa-solid fa-check text-brandRed mt-1"></i>
+                                <span>Brake fluid level check & caliper lubrication</span>
+                            </div>
+                            <div class="flex items-start gap-2">
+                                <i class="fa-solid fa-check text-brandRed mt-1"></i>
+                                <span>12-Month/20,000km Warranty</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pt-6 border-t border-gray-800">
+                        <div class="flex items-baseline justify-between mb-4">
+                            <span class="text-xs text-metallicSilver uppercase font-semibold">Starting at</span>
+                            <span class="text-2xl sm:text-3xl font-black text-white price-display" data-base-usd="279" data-base-zar="4200" data-base-gbp="225" data-base-aud="430">$279</span>
+                        </div>
+                        <a href="#booking" onclick="selectService('Brake & Rotor Replacement')" class="w-full bg-brandRed hover:bg-red-600 text-white font-bold uppercase text-xs tracking-wider py-3 rounded-xl transition-colors block text-center shadow-lg shadow-red-600/30">
+                            Book This Package
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Package 3: Diagnostic Scan & Health Report -->
+                <div class="bg-cardCharcoal border border-gray-800 hover:border-brandRed/60 rounded-2xl p-6 flex flex-col justify-between transition-all duration-300 hover:shadow-xl hover:shadow-red-900/10 group">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-xs font-bold uppercase tracking-widest bg-gray-800 text-metallicSilver px-3 py-1 rounded-full group-hover:bg-brandRed group-hover:text-white transition-colors">Diagnostics</span>
+                            <i class="fa-solid fa-laptop-code text-brandYellow text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold uppercase text-white mb-2">Diagnostic Scan</h3>
+                        <p class="text-xs text-metallicSilver mb-6">OBD-II full system scan, live sensor analysis, and expert explanation of dashboard warning lights.</p>
+                        
+                        <div class="space-y-3 mb-6 text-sm text-gray-300">
+                            <div class="flex items-start gap-2">
+                                <i class="fa-solid fa-check text-brandYellow mt-1"></i>
+                                <span>Full computer module fault code scan</span>
+                            </div>
+                            <div class="flex items-start gap-2">
+                                <i class="fa-solid fa-check text-brandYellow mt-1"></i>
+                                <span>Check engine, ABS, airbag & transmission checks</span>
+                            </div>
+                            <div class="flex items-start gap-2">
+                                <i class="fa-solid fa-check text-brandYellow mt-1"></i>
+                                <span>Detailed printed or emailed health report</span>
+                            </div>
+                            <div class="flex items-start gap-2">
+                                <i class="fa-solid fa-check text-brandYellow mt-1"></i>
+                                <span>Expert repair estimate & recommendation</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pt-6 border-t border-gray-800">
+                        <div class="flex items-baseline justify-between mb-4">
+                            <span class="text-xs text-metallicSilver uppercase font-semibold">Starting at</span>
+                            <span class="text-2xl sm:text-3xl font-black text-white price-display" data-base-usd="89" data-base-zar="1350" data-base-gbp="75" data-base-aud="140">$89</span>
+                        </div>
+                        <a href="#booking" onclick="selectService('Diagnostic Scan')" class="w-full bg-gray-800 hover:bg-brandRed text-white font-bold uppercase text-xs tracking-wider py-3 rounded-xl transition-colors block text-center">
+                            Book This Package
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Package 4: Minor Tune-Ups & Maintenance -->
+                <div class="bg-cardCharcoal border border-gray-800 hover:border-brandRed/60 rounded-2xl p-6 flex flex-col justify-between transition-all duration-300 hover:shadow-xl hover:shadow-red-900/10 group">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-xs font-bold uppercase tracking-widest bg-gray-800 text-metallicSilver px-3 py-1 rounded-full group-hover:bg-brandRed group-hover:text-white transition-colors">Maintenance</span>
+                            <i class="fa-solid fa-oil-can text-brandYellow text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold uppercase text-white mb-2">Minor Tune-Ups</h3>
+                        <p class="text-xs text-metallicSilver mb-6">Essential mobile service including synthetic oil change, filter replacements, and spark plugs.</p>
+                        
+                        <div class="space-y-3 mb-6 text-sm text-gray-300">
+                            <div class="flex items-start gap-2">
+                                <i class="fa-solid fa-check text-brandYellow mt-1"></i>
+                                <span>Full synthetic oil & OEM oil filter change</span>
+                            </div>
+                            <div class="flex items-start gap-2">
+                                <i class="fa-solid fa-check text-brandYellow mt-1"></i>
+                                <span>Engine air filter & cabin filter replacement</span>
+                            </div>
+                            <div class="flex items-start gap-2">
+                                <i class="fa-solid fa-check text-brandYellow mt-1"></i>
+                                <span>Fluid top-offs (coolant, washer, brake fluid)</span>
+                            </div>
+                            <div class="flex items-start gap-2">
+                                <i class="fa-solid fa-check text-brandYellow mt-1"></i>
+                                <span>Multi-point safety inspection included</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pt-6 border-t border-gray-800">
+                        <div class="flex items-baseline justify-between mb-4">
+                            <span class="text-xs text-metallicSilver uppercase font-semibold">Starting at</span>
+                            <span class="text-2xl sm:text-3xl font-black text-white price-display" data-base-usd="129" data-base-zar="1950" data-base-gbp="105" data-base-aud="199">$129</span>
+                        </div>
+                        <a href="#booking" onclick="selectService('Minor Tune-Ups')" class="w-full bg-gray-800 hover:bg-brandRed text-white font-bold uppercase text-xs tracking-wider py-3 rounded-xl transition-colors block text-center">
+                            Book This Package
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Service Area Suburb/Zip-Code Checker & Booking Request Form -->
+        <section id="service-checker" class="py-24 bg-cardCharcoal/60 border-t border-gray-800 relative">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+                
+                <div class="text-center max-w-2xl mx-auto mb-12 space-y-4">
+                    <span class="text-brandYellow uppercase font-bold tracking-widest text-xs">Coverage Verification</span>
+                    <h2 class="text-3xl sm:text-4xl font-black uppercase text-white tracking-tight">Check Your Location & Book</h2>
+                    <p class="text-metallicSilver text-sm">Enter your postal code or suburb below to instantly verify mobile service availability in your neighborhood.</p>
+                </div>
+
+                <!-- Zip Checker Widget Card -->
+                <div class="bg-darkCharcoal border border-gray-800 rounded-3xl p-6 sm:p-10 shadow-2xl space-y-8">
+                    
+                    <!-- Search Input Group -->
+                    <div class="flex flex-col sm:flex-row gap-3">
+                        <div class="relative flex-1">
+                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-500">
+                                <i class="fa-solid fa-location-crosshairs"></i>
+                            </div>
+                            <input type="text" id="zip-input" placeholder="Enter Zip Code / Suburb (e.g., 0157, Centurion, 90210, SW1A)" class="w-full bg-cardCharcoal border border-gray-700 focus:border-brandRed text-white placeholder-gray-500 rounded-xl pl-11 pr-4 py-4 text-sm font-semibold outline-none transition-colors">
+                        </div>
+                        <button onclick="checkServiceArea()" class="bg-brandRed hover:bg-red-600 text-white font-black uppercase tracking-wider px-8 py-4 rounded-xl transition-all shadow-lg shadow-red-600/30 flex items-center justify-center gap-2">
+                            <span>Check Area</span>
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </button>
+                    </div>
+
+                    <!-- Result Notification Box -->
+                    <div id="checker-result" class="hidden p-4 rounded-xl text-sm font-semibold border flex items-center gap-3 transition-all">
+                        <i id="checker-icon" class="fa-solid text-xl"></i>
+                        <span id="checker-text"></span>
+                    </div>
+
+                    <!-- Booking Request Form (Integrated) -->
+                    <div id="booking" class="pt-6 border-t border-gray-800">
+                        <h3 class="text-xl font-bold uppercase text-white mb-6 flex items-center gap-2">
+                            <i class="fa-solid fa-calendar-days text-brandYellow"></i>
+                            <span>Schedule On-Location Service</span>
+                        </h3>
+
+                        <form id="booking-form" onsubmit="handleBookingSubmit(event)" class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            
+                            <!-- Full Name -->
+                            <div class="space-y-2">
+                                <label class="text-xs font-bold uppercase tracking-wider text-metallicSilver">Full Name</label>
+                                <input type="text" required placeholder="John Doe" class="w-full bg-cardCharcoal border border-gray-700 focus:border-brandRed text-white rounded-xl px-4 py-3.5 text-sm outline-none transition-colors">
+                            </div>
+
+                            <!-- Phone Number -->
+                            <div class="space-y-2">
+                                <label class="text-xs font-bold uppercase tracking-wider text-metallicSilver">Phone Number</label>
+                                <input type="tel" required placeholder="+27 82 123 4567" class="w-full bg-cardCharcoal border border-gray-700 focus:border-brandRed text-white rounded-xl px-4 py-3.5 text-sm outline-none transition-colors">
+                            </div>
+
+                            <!-- Vehicle Make / Model / Year -->
+                            <div class="space-y-2">
+                                <label class="text-xs font-bold uppercase tracking-wider text-metallicSilver">Vehicle Make, Model & Year</label>
+                                <input type="text" required placeholder="e.g., 2006 Toyota Yaris T3" class="w-full bg-cardCharcoal border border-gray-700 focus:border-brandRed text-white rounded-xl px-4 py-3.5 text-sm outline-none transition-colors">
+                            </div>
+
+                            <!-- Service Selection -->
+                            <div class="space-y-2">
+                                <label class="text-xs font-bold uppercase tracking-wider text-metallicSilver">Select Service Package</label>
+                                id="service-select" class="w-full bg-cardCharcoal border border-gray-700 focus:border-brandRed text-white rounded-xl px-4 py-3.5 text-sm outline-none transition-colors">
+                                    <option value="Full Mobile Detail">Full Mobile Detail</option>
+                                    <option value="Brake & Rotor Replacement" selected>Brake & Rotor Replacement</option>
+                                    <option value="Diagnostic Scan">Diagnostic Scan</option>
+                                    <option value="Minor Tune-Ups">Minor Tune-Ups</option>
+                                    <option value="Custom Service Request">Custom On-Site Repair</option>
+                                </select>
+                            </div>
+
+                            <!-- Street Address / Location -->
+                            <div class="sm:col-span-2 space-y-2">
+                                <label class="text-xs font-bold uppercase tracking-wider text-metallicSilver">Service Location (Home/Office Address)</label>
+                                <input type="text" required placeholder="Street address, suburb, or landmark where technician should park" class="w-full bg-cardCharcoal border border-gray-700 focus:border-brandRed text-white rounded-xl px-4 py-3.5 text-sm outline-none transition-colors">
+                            </div>
+
+                            <!-- Preferred Date & Time -->
+                            <div class="space-y-2">
+                                <label class="text-xs font-bold uppercase tracking-wider text-metallicSilver">Preferred Date</label>
+                                <input type="date" required class="w-full bg-cardCharcoal border border-gray-700 focus:border-brandRed text-white rounded-xl px-4 py-3.5 text-sm outline-none transition-colors">
+                            </div>
+
+                            <div class="space-y-2">
+                                <label class="text-xs font-bold uppercase tracking-wider text-metallicSilver">Preferred Time Window</label>
+                                <select class="w-full bg-cardCharcoal border border-gray-700 focus:border-brandRed text-white rounded-xl px-4 py-3.5 text-sm outline-none transition-colors">
+                                    <option>Morning (08:00 AM - 12:00 PM)</option>
+                                    <option>Afternoon (12:00 PM - 04:00 PM)</option>
+                                    <option>Late Afternoon (04:00 PM - 07:00 PM)</option>
+                                </select>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <div class="sm:col-span-2 pt-4">
+                                <button type="submit" class="w-full bg-brandRed hover:bg-red-600 text-white font-black uppercase tracking-wider py-4 rounded-xl shadow-xl shadow-red-600/40 transition-all hover:scale-[1.01] flex items-center justify-center gap-3 text-base">
+                                    <i class="fa-solid fa-circle-check"></i>
+                                    <span>Confirm Mobile Service Booking</span>
+                                </button>
+                                <p class="text-center text-[11px] text-gray-500 mt-3"><i class="fa-solid fa-lock mr-1"></i> No immediate payment required. Our dispatch team will confirm your slot within 15 minutes.</p>
+                            </div>
+
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-cardCharcoal border-t border-gray-800 text-metallicSilver py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+            <div class="space-y-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-brandRed rounded-lg flex items-center justify-center text-white text-lg font-black">
+                        <i class="fa-solid fa-car-burst"></i>
+                    </div>
+                    <span class="text-xl font-black text-white uppercase tracking-wider">REVIVE</span>
+                </div>
+                <p class="text-xs text-gray-400 leading-relaxed">
+                    Professional mobile auto care bringing certified mechanical repairs and elite detailing directly to your residential or corporate doorstep.
+                </p>
+                <div class="flex items-center gap-3 text-lg">
+                    <a href="#" aria-label="Facebook Page" class="w-9 h-9 bg-gray-800 hover:bg-brandRed hover:text-white rounded-lg flex items-center justify-center transition-colors"><i class="fa-brands fa-facebook-f"></i></a>
+                    <a href="#" aria-label="Instagram Profile" class="w-9 h-9 bg-gray-800 hover:bg-brandRed hover:text-white rounded-lg flex items-center justify-center transition-colors"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#" aria-label="Twitter Profile" class="w-9 h-9 bg-gray-800 hover:bg-brandRed hover:text-white rounded-lg flex items-center justify-center transition-colors"><i class="fa-brands fa-x-twitter"></i></a>
+                    <a href="#" aria-label="WhatsApp Support" class="w-9 h-9 bg-gray-800 hover:bg-brandRed hover:text-white rounded-lg flex items-center justify-center transition-colors"><i class="fa-brands fa-whatsapp"></i></a>
+                </div>
+            </div>
+
+            <div>
+                <h4 class="text-xs font-bold uppercase tracking-widest text-white mb-4">Quick Navigation</h4>
+                <ul class="space-y-2 text-xs">
+                    <li><a href="#services" class="hover:text-brandRed transition-colors">Service Packages</a></li>
+                    <li><a href="#transformations" class="hover:text-brandRed transition-colors">Before & After Results</a></li>
+                    <li><a href="#service-checker" class="hover:text-brandRed transition-colors">Check Service Area</a></li>
+                    <li><a href="#booking" class="hover:text-brandRed transition-colors">Request Dispatch</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="text-xs font-bold uppercase tracking-widest text-white mb-4">Core Services</h4>
+                <ul class="space-y-2 text-xs">
+                    <li><span class="text-gray-400">Full Mobile Detailing & Ceramic Sealant</span></li>
+                    <li><span class="text-gray-400">Brake Pad & Rotor Replacement</span></li>
+                    <li><span class="text-gray-400">OBD-II Diagnostic Fault Scanning</span></li>
+                    <li><span class="text-gray-400">Minor Tune-ups & Synthetic Oil Changes</span></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="text-xs font-bold uppercase tracking-widest text-white mb-4">Emergency Dispatch</h4>
+                <p class="text-xs text-gray-400 mb-3">Need urgent on-site assistance? Call our mobile dispatch hotline directly.</p>
+                <div class="text-lg font-black text-brandYellow mb-2" id="footer-phone">+27 (0) 800 REVIVE</div>
+                <div class="text-[11px] text-gray-500"><i class="fa-regular fa-clock mr-1"></i> Mon-Sat: 07:30 AM - 06:00 PM</div>
+            </div>
+        </div>
+
+        <div class="max-w-7xl mx-auto pt-8 border-t border-gray-800 text-center text-[11px] text-gray-500 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <p>&copy; 2026 Revive Mobile Auto Care. All rights reserved. Fully Insured On-Location Service.</p>
+            <div class="flex gap-6">
+                <a href="#" class="hover:text-white transition-colors">Privacy Policy</a>
+                <a href="#" class="hover:text-white transition-colors">Terms of Service</a>
+                <a href="#" class="hover:text-white transition-colors">Warranty Terms</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // --- 1. Dynamic Country & Context Localization ---
+        window.addEventListener('DOMContentLoaded', () => {
+            detectUserContext();
+            initComparisons();
+        });
+
+        function detectUserContext() {
+            // Check timezone or locale to adapt currency and region-relevant details
+            const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || '';
+            const lang = navigator.language || 'en-ZA';
+            
+            const locationIndicator = document.getElementById('location-indicator');
+            const regionCompliance = document.getElementById('region-compliance');
+            const footerPhone = document.getElementById('footer-phone');
+            
+            let currency = 'USD';
+            let symbol = '$';
+            let countryName = 'International';
+            let phoneNum = '+1 (800) 555-REVIVE';
+
+            if (tz.includes('Johannesburg') || tz.includes('Africa') || lang.includes('ZA')) {
+                currency = 'ZAR';
+                symbol = 'R';
+                countryName = 'South Africa (Gauteng / Centurion & Surrounds)';
+                phoneNum = '+27 (0) 82 555 3842';
+            } else if (tz.includes('London') || lang.includes('GB')) {
+                currency = 'GBP';
+                symbol = '£';
+                countryName = 'United Kingdom';
+                phoneNum = '+44 20 7946 0912';
+            } else if (tz.includes('Sydney') || tz.includes('Australia') || lang.includes('AU')) {
+                currency = 'AUD';
+                symbol = 'A$';
+                countryName = 'Australia';
+                phoneNum = '+61 2 9157 0192';
+            } else {
+                currency = 'USD';
+                symbol = '$';
+                countryName = 'United States';
+                phoneNum = '+1 (800) 555-REVIVE';
+            }
+
+            locationIndicator.innerHTML = `<i class="fa-solid fa-location-dot text-brandRed"></i> Region detected: <span class="text-white font-bold ml-1">${countryName}</span>`;
+            regionCompliance.innerHTML = `<i class="fa-solid fa-shield-halved text-brandYellow"></i> Currency & pricing adapted to <span class="text-white font-bold ml-1">${currency}</span>`;
+            if (footerPhone) footerPhone.textContent = phoneNum;
+
+            // Update price displays dynamically
+            const priceElements = document.querySelectorAll('.price-display');
+            priceElements.forEach(el => {
+                const val = el.getAttribute(`data-base-${currency.toLowerCase()}`) || el.getAttribute('data-base-usd');
+                el.textContent = `${symbol}${val}`;
+            });
+        }
+
+        // --- 2. Mobile Menu Toggle ---
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+
+        // --- 3. Before / After Interactive Slider Logic ---
+        let currentSliderType = 'detailing';
+
+        const detailingBefore = "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&q=80&w=1200";
+        const detailingAfter = "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?auto=format&fit=crop&q=80&w=1200";
+
+        const repairBefore = "https://images.unsplash.com/photo-1517524008697-84bbe3c3fd98?auto=format&fit=crop&q=80&w=1200";
+        const repairAfter = "https://images.unsplash.com/photo-1486006920555-c77dce18193b?auto=format&fit=crop&q=80&w=1200";
+
+        function switchSlider(type) {
+            currentSliderType = type;
+            const btnDetailing = document.getElementById('btn-slider-detailing');
+            const btnRepair = document.getElementById('btn-slider-repair');
+            const imgBefore = document.getElementById('img-before');
+            const imgAfter = document.getElementById('img-after');
+
+            if (type === 'detailing') {
+                btnDetailing.className = "px-6 py-2.5 rounded-lg font-bold text-xs uppercase tracking-wider transition-all bg-brandRed text-white shadow-lg shadow-red-600/30";
+                btnRepair.className = "px-6 py-2.5 rounded-lg font-bold text-xs uppercase tracking-wider transition-all bg-gray-800 text-metallicSilver hover:text-white";
+                imgBefore.src = detailingBefore;
+                imgAfter.src = detailingAfter;
+            } else {
+                btnRepair.className = "px-6 py-2.5 rounded-lg font-bold text-xs uppercase tracking-wider transition-all bg-brandRed text-white shadow-lg shadow-red-600/30";
+                btnDetailing.className = "px-6 py-2.5 rounded-lg font-bold text-xs uppercase tracking-wider transition-all bg-gray-800 text-metallicSilver hover:text-white";
+                imgBefore.src = repairBefore;
+                imgAfter.src = repairAfter;
+            }
+        }
+
+        function initComparisons() {
+            const container = document.getElementById('comparison-container');
+            const foreground = document.getElementById('img-comp-foreground');
+            const slider = document.getElementById('img-comp-slider');
+            
+            let isDown = false;
+
+            function getCursorPos(e) {
+                const rect = container.getBoundingClientRect();
+                let x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
+                if (x < 0) x = 0;
+                if (x > rect.width) x = rect.width;
+                return x;
+            }
+
+            function slide(x) {
+                const rect = container.getBoundingClientRect();
+                let percentage = (x / rect.width) * 100;
+                if (percentage < 5) percentage = 5;
+                if (percentage > 95) percentage = 95;
+                foreground.style.width = percentage + "%";
+                slider.style.left = percentage + "%";
+            }
+
+            slider.addEventListener('mousedown', (e) => { isDown = true; });
+            window.addEventListener('mouseup', () => { isDown = false; });
+            window.addEventListener('mousemove', (e) => {
+                if (!isDown) return;
+                let pos = getCursorPos(e);
+                slide(pos);
+            });
+
+            // Touch support for mobile
+            slider.addEventListener('touchstart', (e) => { isDown = true; });
+            window.addEventListener('touchend', () => { isDown = false; });
+            window.addEventListener('touchmove', (e) => {
+                if (!isDown) return;
+                let pos = getCursorPos(e);
+                slide(pos);
+            });
+
+            // Click anywhere on container to move slider
+            container.addEventListener('click', (e) => {
+                const rect = container.getBoundingClientRect();
+                let x = e.clientX - rect.left;
+                slide(x);
+            });
+        }
+
+        // --- 4. Select Service Helper for Booking Form ---
+        function selectService(packageName) {
+            const selectEl = document.querySelector('select[id="service-select"]') || document.querySelector('select');
+            if (selectEl) {
+                for (let i = 0; i < selectEl.options.length; i++) {
+                    if (selectEl.options[i].value === packageName) {
+                        selectEl.selectedIndex = i;
+                        break;
+                    }
+                }
+            }
+        }
+
+        // --- 5. Zip Code / Suburb Service Area Checker ---
+        function checkServiceArea() {
+            const input = document.getElementById('zip-input').value.trim().toLowerCase();
+            const resultBox = document.getElementById('checker-result');
+            const checkerText = document.getElementById('checker-text');
+            const checkerIcon = document.getElementById('checker-icon');
+
+            if (!input) {
+                resultBox.className = "p-4 rounded-xl text-sm font-semibold border flex items-center gap-3 bg-red-950/40 border-red-800 text-red-300";
+                checkerIcon.className = "fa-solid fa-triangle-exclamation text-brandRed text-xl";
+                checkerText.textContent = "Please enter a valid zip code or suburb name to check coverage.";
+                resultBox.classList.remove('hidden');
+                return;
+            }
+
+            // Simulated service coverage database / rules
+            // Included regions: Centurion, Pretoria, Midrand, Johannesburg, London, Sydney, Los Angeles, etc.
+            const supportedKeywords = [
+                '0157', '0169', '0081', '0182', 'centurion', 'pretoria', 'midrand', 'johannesburg', 
+                'sandton', 'rosebank', 'rooi', 'lyttelton', 'clubview', 'wiredapark', 'thatchfield',
+                'sw1a', 'e1', 'w1', 'nw1', '90210', '10001', '2000', 'london', 'new york', 'sydney'
+            ];
+
+            let isSupported = false;
+            for (let kw of supportedKeywords) {
+                if (input.includes(kw)) {
+                    isSupported = true;
+                    break;
+                }
+            }
+
+            // Also support 4-digit numbers generally as standard mobile zones
+            if (/^\d{4}$/.test(input) || /^\d{5}$/.test(input)) {
+                isSupported = true;
+            }
+
+            resultBox.classList.remove('hidden');
+            if (isSupported) {
+                resultBox.className = "p-4 rounded-xl text-sm font-semibold border flex items-center gap-3 bg-emerald-950/40 border-emerald-800 text-emerald-300";
+                checkerIcon.className = "fa-solid fa-circle-check text-emerald-400 text-xl";
+                checkerText.innerHTML = `Great news! <span class="text-white font-bold uppercase">${input}</span> is within our primary mobile service coverage zone with <span class="text-brandYellow font-bold">Free Call-Out</span>. Complete your booking below!`;
+            } else {
+                resultBox.className = "p-4 rounded-xl text-sm font-semibold border flex items-center gap-3 bg-amber-950/40 border-amber-800 text-amber-300";
+                checkerIcon.className = "fa-solid fa-circle-info text-brandYellow text-xl";
+                checkerText.innerHTML = `<span class="text-white font-bold uppercase">${input}</span> is outside our standard zone, but mobile dispatch is available with a nominal extended travel fee. You can still submit your booking request below!`;
+            }
+        }
+
+        // --- 6. Booking Form Submission Handler ---
+        function handleBookingSubmit(e) {
+            e.preventDefault();
+            const form = e.target;
+            
+            // Success feedback modal or inline banner
+            const container = document.getElementById('booking');
+            container.innerHTML = `
+                <div class="bg-emerald-950/60 border border-emerald-600/50 rounded-2xl p-8 text-center space-y-4 animate-fade-in">
+                    <div class="w-16 h-16 bg-emerald-600 text-white rounded-full flex items-center justify-center text-3xl mx-auto shadow-lg shadow-emerald-900/50">
+                        <i class="fa-solid fa-check"></i>
+                    </div>
+                    <h3 class="text-2xl font-black text-white uppercase tracking-wider">Booking Request Received!</h3>
+                    <p class="text-sm text-gray-300 max-w-md mx-auto leading-relaxed">
+                        Thank you! Our mobile dispatch team has received your vehicle care request. We are verifying technician availability and will contact you via phone within 15 minutes to confirm your appointment window.
+                    </p>
+                    <div class="pt-4">
+                        <button onclick="location.reload()" class="bg-gray-800 hover:bg-gray-700 text-white font-bold text-xs uppercase tracking-wider px-6 py-3 rounded-xl transition-colors">
+                            Book Another Service
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            // Scroll smoothly back to booking container
+            container.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    </script>
+</body>
+</html>
